@@ -4,7 +4,8 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
-
+<%@include file="taglibs.jsp"%>
+${jquery_js} ${jquery_validate_js} ${jquery_form_js }
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 
@@ -22,24 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	-->
   </head>
 
-  <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.3.1.min.js"></script>
-  <script type="text/javascript">
-         function delet() {
-             var id=$(".a").attr("rel");
-             alert(id);
-             $.ajax({
-                 type:"POST",
-                 url:'user/delete',
-                 data:{
-                     "num":id
-                 },
-                 dataType:"json",
-                 success:function(mav){
-                    alert(mav.message);
-                 }
-             });
-         }
-  </script>
+
   <body>
 
      <table align="center" border="2" width="800">
@@ -50,12 +34,41 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
  </tr>
  <c:forEach var="list" items="${list}" >
    <tr align="center">
-
-   <td>${list.id}</td>
-   <td>${list.username}</td>
-       <td><a onclick="delet()" class="a"  rel="${list.id}" href="javascript:void(0)">删除</a>${list.username}</td>
+       <td>${list.id}</td>
+       <td>${list.username}</td>
+       <td><a onclick="delet()" class="a"
+              rel="${list.id}" href="javascript:void(0)">删除</a><a onclick="update()"   rel="${list.id}" class="update" href="javascript:void(0)">修改</a></td>
 
    </tr></c:forEach>
  </table>
+
+     <form method="POST" action="/user/api/upload" enctype="multipart/form-data" id="fileUploadForm">
+         <input type="file" name="files"/><br/><br/>
+         <input type="submit" value="提交" id="btnSubmit"/>
+     </form>
   </body>
+  <script type="text/javascript">
+      function delet() {
+          var id=$(".a").attr("rel");
+          alert(id);
+          $.ajax({
+              type:"POST",
+              url:'user/delete',
+              data:{
+                  "id":id
+              },
+              dataType:"json",
+              success:function(mav){
+                  alert(mav.message);
+                  window.location.reload();
+              }
+          });
+      }
+
+      $(".update").click(function()
+      {
+          var id=$(this).attr("rel");
+          location.href="${ctx}/user/update.html/"+id;
+      });
+  </script>
 </html>

@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserService {
     public List<User> queryList();
     public int delete(int id);
+    public User query(int id);
+    public int update(User id);
 }
